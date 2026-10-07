@@ -99,7 +99,6 @@ when using NPM or Yarn version 1. For example, when using NPM or Yarn version 1:
 
 ```
 @SCOPE:registry=https://REGION_ID-npm.pkg.dev/PROJECT_ID/REPOSITORY_NAME
-//REGION_ID-npm.pkg.dev/PROJECT_ID/REPOSITORY_NAME:always-auth=true
 
 ```
 

@@ -87,7 +87,8 @@ jobs:
                   command_exp="${command_exp}${BIN_FILE}\""
                   command_exp="${command_exp} | .version += \"${VERSION_SUFFIX}\""
                   jq "${command_exp}" < ../gemini-extension.json >"${RELEASE_DIR}/gemini-extension.json"
-
+                  jq ".version += \"${VERSION_SUFFIX}\"" < ../plugin.json >"${RELEASE_DIR}/plugin.json"
+                  jq ".mcpServers.\"cicd-mcp\" = {\"command\": \"./${BIN_FILE}\"}" < ../mcp_config.json >"${RELEASE_DIR}/mcp_config.json"
                   cp ../README.md "${RELEASE_DIR}/"
                   cp ../LICENSE "${RELEASE_DIR}/"
                   cp -r ../skills "${RELEASE_DIR}/"

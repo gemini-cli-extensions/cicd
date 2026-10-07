@@ -17,6 +17,12 @@ gha-creds-*.json
 #Local agent setup
 .agent
 
+# Local build artifacts
+/bin/
+/cicd-mcp-server/cicd-mcp-server
+
 #npm publishing artifacts
 cicd-mcp-server/npm/artifacts/
 cicd-mcp-server/npm/**/bin/
+!cicd-mcp-server/npm/cicd-mcp/bin/
+!cicd-mcp-server/npm/cicd-mcp/bin/cicd-mcp-server

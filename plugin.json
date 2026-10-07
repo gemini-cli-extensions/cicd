@@ -1,0 +1,28 @@
+{
+  "name": "cicd",
+  "displayName": "Google Cloud CI/CD",
+  "version": "0.2.2",
+  "description": "The CI/CD extension provides Gemini powered AI assisted CI/CD. It supports deployment to Cloud Run and Cloud Storage as well as creation of a robust CI/CD pipeline.",
+  "logo": "https://www.gstatic.com/images/branding/productlogos/google_cloud/v8/192px.svg",
+  "suggestedPrompts": [
+    "Deploy my application to Cloud Run",
+    "Design a CI/CD pipeline for this repository using Cloud Build",
+    "Create a Cloud Deploy release pipeline with staging and production targets"
+  ],
+  "author": {
+    "name": "Google LLC"
+  },
+  "homepage": "https://github.com/gemini-cli-extensions/cicd",
+  "repository": "https://github.com/gemini-cli-extensions/cicd",
+  "license": "Apache-2.0",
+  "keywords": [
+    "gcp",
+    "google-cloud",
+    "cicd",
+    "cloud-run",
+    "cloud-build",
+    "cloud-deploy",
+    "gke",
+    "terraform"
+  ]
+}
