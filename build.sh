@@ -69,8 +69,9 @@ build_mcp() {
   (
     cd ${MCP_SERVER_DIR}
     go mod tidy
-    go build -o "../${BINARY_NAME}"
-    echo "Successfully built '${BINARY_NAME}' Please move it to \`.gemini/extensions/cicd/bin/cicd-mcp-server\`"
+    mkdir -p ../bin
+    go build -o "../bin/${BINARY_NAME}"
+    echo "Successfully built 'bin/${BINARY_NAME}'."
   )
 }
 

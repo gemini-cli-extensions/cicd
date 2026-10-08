@@ -69,16 +69,41 @@ claude plugin install cicd
 ```
 
 ### For Antigravity
-To install our CI/CD extension in Antigravity, you can setup our MCP Server as custom MCP and add skills.
+To install the CI/CD plugin (which bundles both the `cicd-mcp` MCP server and all four CI/CD skills) in Antigravity:
 
-1. Setup custom MCP server
-Follow the instructions at [Connecting Custom MCP Servers](https://antigravity.google/docs/mcp#connecting-custom-mcp-servers). Use the provided [.mcp.json](.mcp.json) file which contains our MCP server config.
+*   Ensure either **Go** (1.24+, to build `./bin/cicd-mcp-server` locally) or **Node.js** (v18+ with `npx` on your `PATH`) is installed. When launching `cicd-mcp`, the plugin runs `./bin/cicd-mcp-server` (or `./cicd-mcp-server` in release archives) relative to the plugin directory, auto-builds it if `./cicd-mcp-server` source and `go` are present, or falls back to `npx -y --package=@google-cloud/cicd-mcp cicd-mcp-server`.
 
-2. Add Skills
-You can use [Skills](https://github.com/vercel-labs/skills) to add skills to Antigravity. 
+#### Option 1: Install from the Antigravity Plugins Marketplace (UI or CLI)
+*   **Antigravity IDE / Web UI**: Open **Settings → Customizations → Plugins** (or **Build with Google**), find **Google Cloud CI/CD**, and click **Install**.
+*   **Antigravity CLI**:
+    ```bash
+    agy plugin install cicd@antigravity-plugins-official
+    ```
+
+#### Option 2: Install Directly from GitHub via Antigravity CLI
+Run the following command in your terminal:
 ```bash
- npx skills add https://github.com/gemini-cli-extensions/cicd --global --all --agent antigravity
+agy plugin install https://github.com/gemini-cli-extensions/cicd
 ```
+Or from inside an active Antigravity CLI interactive session:
+```text
+/plugin install https://github.com/gemini-cli-extensions/cicd
+```
+
+#### Option 3: Install from a Local Clone
+```bash
+git clone https://github.com/gemini-cli-extensions/cicd.git
+cd cicd && ./build.sh
+agy plugin install .
+```
+
+#### Option 4: Manual MCP & Skills Setup
+If you prefer to configure the MCP server and skills separately without installing the plugin bundle:
+1. Follow [Connecting Custom MCP Servers](https://antigravity.google/docs/mcp#connecting-custom-mcp-servers) using the provided [.mcp.json](.mcp.json) file.
+2. Add the skills using [Skills](https://github.com/vercel-labs/skills):
+   ```bash
+   npx skills add https://github.com/gemini-cli-extensions/cicd --global --all --agent antigravity
+   ```
 
 ### For Other Agents
 To install our CI/CD extension in other agents, you can manually set up our MCP server and skills.

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // Copyright 2026 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,80 +15,53 @@
 
 'use strict';
 
+const { spawn } = require('child_process');
 const fs = require('fs');
-const path = require('path');
 const os = require('os');
+const path = require('path');
 
 const PLATFORM = os.platform();
 const ARCH = os.arch();
 
-// 1. Use a lookup table instead of if-else chains
 const SUPPORTED_PACKAGES = {
   'linux_x64': '@google-cloud/cicd-mcp-linux-amd64',
   'darwin_arm64': '@google-cloud/cicd-mcp-darwin-arm64',
   'win32_x64': '@google-cloud/cicd-mcp-windows-amd64',
 };
 
-const key = `${PLATFORM}_${ARCH}`;
-const subPackage = SUPPORTED_PACKAGES[key];
-
+const subPackage = SUPPORTED_PACKAGES[`${PLATFORM}_${ARCH}`];
 if (!subPackage) {
   console.error(`Unsupported platform/architecture: ${PLATFORM}/${ARCH}`);
   process.exit(1);
 }
 
-// 2. Derive paths using const
-const isWindows = PLATFORM === 'win32';
-const binaryName = isWindows ? 'cicd-mcp-server.exe' : 'cicd-mcp-server';
+const binaryName = PLATFORM === 'win32' ? 'cicd-mcp-server.exe' : 'cicd-mcp-server';
 
-function resolveSourcePath() {
+function resolveBinaryPath() {
   try {
     const pkgJsonPath = require.resolve(`${subPackage}/package.json`);
     return path.join(path.dirname(pkgJsonPath), 'bin', binaryName);
   } catch (_) {
-    // Fallback 1: hoisted node_modules/@google-cloud/<subPackage>
     const hoisted = path.join(__dirname, '..', '..', '..', subPackage, 'bin', binaryName);
     if (fs.existsSync(hoisted)) {
       return hoisted;
     }
-    // Fallback 2: local repo layout (cicd-mcp-server/npm/<unscoped-dir>/bin)
     const unscoped = subPackage.replace(/^@[^/]+\//, '');
     return path.join(__dirname, '..', '..', unscoped, 'bin', binaryName);
   }
 }
 
-const sourcePath = resolveSourcePath();
-const targetPath = path.join(__dirname, '..', 'bin', binaryName);
-
-try {
-  // Check if source exists
-  if (!fs.existsSync(sourcePath)) {
-    console.error(`Source binary not found at ${sourcePath}`);
-    process.exit(1);
-  }
-
-  fs.mkdirSync(path.dirname(targetPath), { recursive: true });
-
-  // Remove placeholder if it exists
-  if (fs.existsSync(targetPath)) {
-    fs.unlinkSync(targetPath);
-  }
-
-  // Create hard link or copy
-  try {
-    fs.linkSync(sourcePath, targetPath);
-    console.error(`Linked ${sourcePath} to ${targetPath}`);
-  } catch (err) {
-    // If linking fails (e.g. cross-device), copy instead
-    fs.copyFileSync(sourcePath, targetPath);
-    console.error(`Copied ${sourcePath} to ${targetPath}`);
-  }
-
-  // Ensure executable permissions (not needed on Windows)
-  if (!isWindows) {
-    fs.chmodSync(targetPath, 0o755);
-  }
-} catch (err) {
-  console.error(`Failed to install binary: ${err.message}`);
+const binPath = resolveBinaryPath();
+if (!fs.existsSync(binPath)) {
+  console.error(`Binary not found at ${binPath}`);
   process.exit(1);
 }
+
+const child = spawn(binPath, process.argv.slice(2), { stdio: 'inherit' });
+child.on('exit', (code, signal) => {
+  if (signal) {
+    process.kill(process.pid, signal);
+  } else {
+    process.exit(code ?? 0);
+  }
+});

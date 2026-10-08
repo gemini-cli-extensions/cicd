@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "cicd-mcp": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "if [ -f \"./bin/cicd-mcp-server\" ] && [ -x \"./bin/cicd-mcp-server\" ]; then exec \"./bin/cicd-mcp-server\"; elif [ -f \"./cicd-mcp-server\" ] && [ -x \"./cicd-mcp-server\" ]; then exec \"./cicd-mcp-server\"; elif [ -d \"./cicd-mcp-server\" ] && command -v go >/dev/null 2>&1; then mkdir -p ./bin && (cd ./cicd-mcp-server && go build -o ../bin/cicd-mcp-server .) >&2 && exec \"./bin/cicd-mcp-server\"; else exec npx -y --package=@google-cloud/cicd-mcp cicd-mcp-server; fi"
+      ]
+    }
+  }
+}

@@ -57,7 +57,7 @@ func BuildBM25GobFiles() {
 	// 1. Build Patterns Index
 	patternsIdx := bm25.NewBM25Index()
 	loadFilesFromDirectory(patternsIdx, "./patterns", 1)
-	patternsFile := "patterns_index.gob"
+	patternsFile := "../cicd-mcp-server/bm25/client/patterns_index.gob"
 	if err := bm25.SaveIndex(patternsFile, patternsIdx); err != nil {
 		fmt.Printf("Error saving patterns index: %v\n", err)
 	} else {
@@ -70,7 +70,7 @@ func BuildBM25GobFiles() {
 	if _, err := os.Stat("./.document-sources"); err == nil {
 		loadFilesFromDirectory(knowledgeIdx, "./.document-sources", nextID)
 	}
-	knowledgeFile := "knowledge_index.gob"
+	knowledgeFile := "../cicd-mcp-server/bm25/client/knowledge_index.gob"
 	if err := bm25.SaveIndex(knowledgeFile, knowledgeIdx); err != nil {
 		fmt.Printf("Error saving knowledge index: %v\n", err)
 	} else {
